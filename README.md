@@ -182,13 +182,8 @@ Les contributions sont les bienvenues ! N'hésitez pas à :
 - Proposer des améliorations
 - Ajouter de nouvelles fonctionnalités
 
-##  Licence
 
-Ce projet est fourni à des fins éducatives et de démonstration.
-
-##  Auteur
-
-Développé dans le cadre d'un projet d'analyse de données ETL.
+##  Auteur : Ameziane Manel Fatma
 
 ---
 
