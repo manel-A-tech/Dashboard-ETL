@@ -55,7 +55,7 @@ projet/
 
 1. Cloner le projet :
 ```bash
-git clone <url-du-repo>
+git clone <https://github.com/manel-A-tech/Dashboard-ETL.git>
 cd northwind-etl
 ```
 
@@ -81,8 +81,6 @@ SQL_DATABASE = "Northwind"
 ```bash
 streamlit run app.py
 ```
-
-Le dashboard s'ouvrira automatiquement dans votre navigateur par défaut.
 
 ### Fonctionnement
 
@@ -159,26 +157,6 @@ Status_Livraison = 'Livrée' si ShippedDate existe
 - Graphique en barres groupées
 - Comparaison interannuelle
 
-## 🔧 Dépannage
-
-### Erreur de connexion Access
-```
-Erreur : Fichier introuvable
-```
-**Solution :** Vérifiez le chemin dans `ETLconfig.py` et assurez-vous que le fichier .accdb existe.
-
-### Erreur ODBC Driver
-```
-Erreur : Driver not found
-```
-**Solution :** Installez le Microsoft Access Database Engine ou l'ODBC Driver 17 for SQL Server.
-
-### Données vides
-```
-Aucune donnée extraite
-```
-**Solution :** Vérifiez que les bases SQL Server et Access contiennent des données et que les connexions sont correctes.
-
 ## 📝 Table Data Warehouse
 
 La table `DWH_Global_Analysis` créée dans SQL Server contient :
@@ -197,18 +175,18 @@ La table `DWH_Global_Analysis` créée dans SQL Server contient :
 | Annee | int | Année |
 | Status_Livraison | varchar | Livrée ou Non Livrée |
 
-## 🤝 Contribution
+##  Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à :
 - Signaler des bugs
 - Proposer des améliorations
 - Ajouter de nouvelles fonctionnalités
 
-## 📄 Licence
+##  Licence
 
 Ce projet est fourni à des fins éducatives et de démonstration.
 
-## 👤 Auteur
+##  Auteur
 
 Développé dans le cadre d'un projet d'analyse de données ETL.
 
