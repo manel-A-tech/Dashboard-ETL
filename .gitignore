@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
+
+# Python compiled files - CPython cache
+*.cpython-*.pyc
+*.python-*.pyc
 .Python
 build/
 develop-eggs/
