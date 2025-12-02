@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from scripts.extract import extract_data
 from scripts.transform import transform_data
-from scripts.load import load_data_simple
+from scripts.load import load_data
 
 # config de la page
 st.set_page_config(
@@ -25,7 +25,7 @@ if st.button(" Rafraîchir les données", type="primary"):
             df_transformed = transform_data(df_raw)
 
         with st.spinner("Chargement en cours..."):
-            success = load_data_simple(df_transformed)
+            success = load_data(df_transformed)
 
         if success:
             st.session_state['data'] = df_transformed

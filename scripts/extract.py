@@ -129,21 +129,4 @@ def extract_data():
 
     return df_final
 
-# Exemple d'utilisation
-if __name__ == "__main__":
-    df = extract_data()
-    if not df.empty:
-        print("\n" + "="*70)
-        print("APERÇU DES DONNÉES CONSOLIDÉES")
-        print("="*70)
-        print(df.head(10))
-        print(f"\nShape: {df.shape}")
-        print(f"Colonnes : {df.columns.tolist()}")
-        
-        # Statistiques par source
-        print("\n" + "="*70)
-        print("STATISTIQUES PAR SOURCE")
-        print("="*70)
-        print(df['Source'].value_counts())
-    else:
-        print("\n❌ Aucune donnée à afficher")
+
