@@ -6,7 +6,7 @@ ACCESS_CONN_STRING = (
 )
     
 # Connexion SQL Server 
-SQL_SERVER = r".\SQLEXPRESS"  # FIXED: Added 'r' prefix for raw string
+SQL_SERVER = r".\SQLEXPRESS" 
 SQL_DATABASE = "Northwind"  
 SQL_CONN_STRING = (
   f"DRIVER={{ODBC Driver 17 for SQL Server}};"
