@@ -41,6 +41,7 @@ projet/
     ├── extract.py             # Extraction des données
     ├── transform.py           # Transformation des données
     └── load.py                # Chargement dans SQL Server
+    └── main.py 
 ```
 
 ## ⚙️ Configuration
