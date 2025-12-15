@@ -57,6 +57,7 @@ venv.bak/
 *.accdb
 *.mdb
 
+
 # Configuration sensible
 scripts/ETLconfig.py
 config.py
@@ -76,6 +77,7 @@ data/
 *.csv
 *.xlsx
 *.xls
+*.pkl
 
 # Backups
 *.bak

@@ -15,59 +15,109 @@ def get_sql_engine():
 
 def load_data(df):
     """
-    CHARGE les données transformées et la dimension Date dans SQL Server.
+    CHARGE :
+    - Table de faits
+    - DIM_Date
+    - DIM_Employee
+    - DIM_Customer
     """
     print("\n--- 3. CHARGEMENT (LOAD VERS SQL SERVER) ---")
 
-    table_name = "DWH_Global_Analysis"
-    dim_date_table = "DIM_Date"
+    FACT_TABLE = "FACT_Orders"
+    DIM_DATE_TABLE = "DIM_Date"
+    DIM_EMPLOYEE_TABLE = "DIM_Employee"
+    DIM_CUSTOMER_TABLE = "DIM_Customer"
 
     try:
         engine = get_sql_engine()
 
-        print(f"-> Connexion au serveur : .\\SQLEXPRESS")
-        print(f"-> Base de données : Northwind")
-        
-        # 1. Charger la table de faits principale
-        print(f"   -> Écriture dans la table : {table_name}")
-        df_to_load = df.copy()
-        
-        # Retirer la dimension Date des attributs avant le chargement
-        if 'dim_date' in df.attrs:
-            dim_date = df.attrs['dim_date']
-        else:
-            dim_date = None
-            
-        df_to_load.to_sql(table_name, engine, if_exists='replace', index=False)
-        print(f"SUCCÈS : {len(df_to_load)} lignes insérées dans '{table_name}'.")
-        
-        # 2. Charger la dimension Date si elle existe
+        print("-> Connexion SQL Server réussie")
+
+        # =========================================================
+        # 1. RÉCUPÉRATION DES DIMENSIONS
+        # =========================================================
+        dim_date = df.attrs.get('dim_date')
+        dim_employee = df.attrs.get('dim_employee')
+        dim_customer = df.attrs.get('dim_customer')
+
+        # =========================================================
+        # 2. CHARGEMENT TABLE DE FAITS
+        # =========================================================
+        print(f"\n-> Chargement table de faits : {FACT_TABLE}")
+        df_fact = df.copy()
+
+        df_fact.to_sql(
+            FACT_TABLE,
+            engine,
+            if_exists='replace',
+            index=False
+        )
+
+        print(f"SUCCÈS : {len(df_fact)} lignes insérées dans {FACT_TABLE}")
+
+        # =========================================================
+        # 3. CHARGEMENT DIM_DATE
+        # =========================================================
         if dim_date is not None:
-            print(f"\n   -> Écriture de la dimension Date : {dim_date_table}")
-            dim_date.to_sql(dim_date_table, engine, if_exists='replace', index=False)
-            print(f"SUCCÈS : {len(dim_date)} jours insérés dans '{dim_date_table}'.")
-            
-            # Vérification de la dimension Date
-            try:
-                with engine.begin() as conn:
-                    result = pd.read_sql(f"SELECT COUNT(*) as count FROM {dim_date_table}", conn)
-                    count = result['count'].iloc[0]
-                    print(f"VÉRIFICATION : {count} jours dans '{dim_date_table}'")
-            except Exception as verify_error:
-                print(f"Vérification de {dim_date_table} échouée : {verify_error}")
-        
-        # 3. Vérification de la table principale
-        try:
-            with engine.begin() as conn:
-                result = pd.read_sql(f"SELECT COUNT(*) as count FROM {table_name}", conn)
-                count = result['count'].iloc[0]
-                print(f"VÉRIFICATION : {count} lignes dans '{table_name}'")
-        except Exception as verify_error:
-            print(f"Vérification échouée : {verify_error}")
-        
-        print("\nCHARGEMENT COMPLET TERMINÉ")
+            print(f"\n-> Chargement dimension Date : {DIM_DATE_TABLE}")
+            dim_date.to_sql(
+                DIM_DATE_TABLE,
+                engine,
+                if_exists='replace',
+                index=False
+            )
+            print(f"SUCCÈS : {len(dim_date)} lignes dans {DIM_DATE_TABLE}")
+
+        # =========================================================
+        # 4. CHARGEMENT DIM_EMPLOYEE
+        # =========================================================
+        if dim_employee is not None:
+            print(f"\n-> Chargement dimension Employee : {DIM_EMPLOYEE_TABLE}")
+            dim_employee.to_sql(
+                DIM_EMPLOYEE_TABLE,
+                engine,
+                if_exists='replace',
+                index=False
+            )
+            print(f"SUCCÈS : {len(dim_employee)} lignes dans {DIM_EMPLOYEE_TABLE}")
+
+        # =========================================================
+        # 5. CHARGEMENT DIM_CUSTOMER
+        # =========================================================
+        if dim_customer is not None:
+            print(f"\n-> Chargement dimension Customer : {DIM_CUSTOMER_TABLE}")
+            dim_customer.to_sql(
+                DIM_CUSTOMER_TABLE,
+                engine,
+                if_exists='replace',
+                index=False
+            )
+            print(f"SUCCÈS : {len(dim_customer)} lignes dans {DIM_CUSTOMER_TABLE}")
+
+        # =========================================================
+        # 6. VÉRIFICATIONS
+        # =========================================================
+        with engine.begin() as conn:
+            for table in [
+                FACT_TABLE,
+                DIM_DATE_TABLE,
+                DIM_EMPLOYEE_TABLE,
+                DIM_CUSTOMER_TABLE
+            ]:
+                try:
+                    result = pd.read_sql(
+                        f"SELECT COUNT(*) AS count FROM {table}",
+                        conn
+                    )
+                    print(f"VÉRIFICATION : {table} → {result['count'].iloc[0]} lignes")
+                except Exception:
+                    print(f"Table {table} non trouvée (normal si dimension absente)")
+
+        print("\nCHARGEMENT COMPLET TERMINÉ ")
         return True
 
     except Exception as e:
-        print(f" Erreur lors de l'écriture SQL : {e}")
-        return False 
+        print(f" Erreur lors du chargement SQL : {e}")
+        return False
+
+
