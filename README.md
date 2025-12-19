@@ -1,191 +1,252 @@
-# Dashboard Northwind ETL
+# Northwind ETL Dashboard 
 
-## 📋 Description
+A comprehensive ETL (Extract, Transform, Load) pipeline with an interactive dashboard for analyzing order data from Northwind databases across SQL Server and Microsoft Access sources.
 
-Ce projet implémente un pipeline ETL (Extract, Transform, Load) complet pour analyser les données de commandes provenant de deux sources Northwind :
-- **SQL Server** : Base de données Northwind classique
-- **Microsoft Access** : Base de données Northwind 2012 (.accdb)
+## Overview
 
-Le dashboard interactif développé avec Streamlit permet de visualiser et d'analyser les commandes livrées et non livrées selon plusieurs dimensions (clients, employés, mois, années).
+This project implements a complete data warehouse solution that consolidates order information from two Northwind database sources, transforms it into analytical dimensions and facts, and presents insights through an interactive Streamlit dashboard.
 
-## 🎯 Fonctionnalités
+**Key Capabilities:**
+- Dual-source data extraction (SQL Server + Access)
+- Dimensional modeling (Date, Employee, Customer dimensions)
+- Real-time ETL pipeline execution
+- Interactive visualizations with delivery status tracking
+- Multi-dimensional analysis (temporal, customer, employee)
 
-- **Extraction** : Récupération des données depuis SQL Server et Access
-- **Transformation** : Nettoyage, standardisation et calcul des KPIs
-- **Chargement** : Insertion dans une table Data Warehouse SQL Server
-- **Visualisation** : Dashboard interactif avec graphiques Plotly
-- **Analyse multi-dimensionnelle** : Par client, employé, mois et année
-- **KPIs principaux** : Total commandes, taux de livraison, répartition par statut
+## Features
 
-## 🛠️ Technologies utilisées
+### ETL Pipeline
+- **Extract**: Retrieves data from SQL Server Northwind and Access Northwind 2012
+- **Transform**: Creates dimension tables, calculates KPIs, and cleanses data
+- **Load**: Populates fact and dimension tables in SQL Server data warehouse
 
-- **Python 3.x**
-- **Streamlit** : Interface web interactive
-- **Pandas** : Manipulation des données
-- **Plotly** : Visualisations graphiques
-- **SQLAlchemy** : Connexion SQL Server
-- **PyODBC** : Connexion Access et SQL Server
-- **SQL Server** : Stockage et Data Warehouse
-- **Microsoft Access** : Source de données secondaire
+### Dashboard Analytics
+- **KPI Metrics**: Total orders, delivered/undelivered counts, delivery rate
+- **Temporal Analysis**: Complete timeline visualization with date dimension statistics
+- **Customer Analysis**: Order distribution across all customers with delivery status
+- **Employee Analysis**: Performance metrics by employee
+- **Interactive Filters**: Real-time data exploration
 
-## 📁 Structure du projet
+## Technology Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Frontend | Streamlit |
+| Data Processing | Pandas |
+| Visualizations | Plotly |
+| Database Connectivity | SQLAlchemy, PyODBC |
+| Data Warehouse | SQL Server |
+| Secondary Source | Microsoft Access |
+
+## Project Structure
 
 ```
-projet/
+project/
 │
-├── app.py                      # Application Streamlit principale
-├── README.md                 
+├── app.py                    # Main Streamlit application
+├── README.md                 # This file
 │
 └── scripts/
-    ├── ETLconfig.py           # Configuration des connexions
-    ├── extract.py             # Extraction des données
-    ├── transform.py           # Transformation des données
-    └── load.py                # Chargement dans SQL Server
-    └── main.py 
+    ├── ETLconfig.py          # Database connection configuration
+    ├── extract.py            # Data extraction from sources
+    ├── transform.py          # Data transformation & dimension creation
+    ├── load.py               # Load to data warehouse
+    └── main.py               # Standalone ETL execution script
 ```
 
-## ⚙️ Configuration
+## Prerequisites
 
-### Prérequis
+### Software Requirements
+- Python 3.8 or higher
+- SQL Server (with Northwind database)
+- Microsoft Access Database Engine (for .accdb files)
+- ODBC Driver 17 for SQL Server
 
-1. **SQL Server** installé avec la base Northwind
-2. **Microsoft Access Database Engine** pour lire les fichiers .accdb
-3. **ODBC Driver 17 for SQL Server**
-
-### Installation
-
-1. Cloner le projet :
-```bash
-git clone <https://github.com/manel-A-tech/Dashboard-ETL.git>
-cd northwind-etl
-```
-
-2. Installer les dépendances :
+### Python Dependencies
 ```bash
 pip install streamlit pandas plotly sqlalchemy pyodbc
 ```
 
-3. Configurer les connexions dans `scripts/ETLconfig.py` :
-```python
-# Chemin vers votre base Access
-ACCESS_DB_PATH = r"C:\Users\VotreNom\Downloads\Northwind 2012.accdb"
+## Installation & Setup
 
-# Serveur SQL Server
-SQL_SERVER = r".\SQLEXPRESS"
-SQL_DATABASE = "Northwind"
+### 1. Clone Repository
+```bash
+git clone https://github.com/manel-A-tech/Dashboard-ETL.git
+cd Dashboard-ETL
 ```
 
-## 🚀 Utilisation
+### 2. Configure Database Connections
 
-### Lancer le dashboard
+Edit `scripts/ETLconfig.py`:
 
+```python
+# Access Database Path
+ACCESS_DB_PATH = r"C:\path\to\your\Northwind 2012.accdb"
+
+# SQL Server Configuration
+SQL_SERVER = r".\SQLEXPRESS"    # Your SQL Server instance
+SQL_DATABASE = "Northwind"       # Your database name
+```
+
+### 3. Verify Database Setup
+- Ensure Northwind database exists in SQL Server
+- Confirm Access file path is correct
+- Test database connectivity
+
+## Usage
+
+### Launch Dashboard
 ```bash
 streamlit run app.py
 ```
 
-### Fonctionnement
+The dashboard will automatically:
+1. Extract data from both sources
+2. Transform and create dimension tables
+3. Load into SQL Server data warehouse
+4. Display interactive visualizations
 
-1. **Chargement initial** : Les données sont extraites et transformées automatiquement au démarrage
-2. **Rafraîchissement** : Cliquez sur "Rafraîchir les données" pour relancer l'ETL complet
-3. **Navigation** : Utilisez les onglets pour explorer les analyses par dimension
-4. **Tableaux détaillés** : Dépliez les sections "Voir le tableau détaillé" pour les données complètes
+### Refresh Data
+Click the **"Rafraîchir les données"** button to re-run the complete ETL pipeline with latest data.
 
-## 📊 Pipeline ETL détaillé
+### Navigate Analysis
+Use the tabs to explore different analytical views:
+- **Par Date**: Temporal trends and date dimension insights
+- **Par Client**: Customer order distribution
+- **Par Employé**: Employee performance metrics
 
-### 1. Extract (Extraction)
+## Data Warehouse Schema
 
-**Source SQL Server :**
-- Jointure des tables Orders, Customers et Employees
-- Récupération des informations complètes de commande
-- Colonnes : OrderID, OrderDate, ShippedDate, ShipCity, ShipCountry, CompanyName, EmployeeName
+### Fact Table: FACT_Orders
 
-**Source Access :**
-- Connexion via PyODBC
-- Lecture de la base Northwind 2012.accdb
-- Même structure de données que SQL Server
-- Consolidation avec un marqueur 'Source'
+| Column | Type | Description |
+|--------|------|-------------|
+| OrderID | int | Order identifier |
+| OrderDate | datetime | Order placement date |
+| ShippedDate | datetime | Shipment date (null if undelivered) |
+| CustomerID | varchar | Customer identifier |
+| CompanyName | varchar | Customer company name |
+| EmployeeID | int | Employee identifier |
+| EmployeeName | varchar | Employee full name |
+| ShipCity | varchar | Delivery city |
+| ShipCountry | varchar | Delivery country |
+| Source | varchar | Data source (SQL_Server/Access) |
+| Date | date | Date key for dimension join |
+| Status_Livraison | varchar | Delivery status (Livrée/Non Livrée) |
 
-### 2. Transform (Transformation)
+### Dimension Tables
 
-**Nettoyage des données :**
-- Conversion des dates au format datetime
-- Gestion des valeurs nulles (NaT pour les dates)
+**DIM_Date**: Complete date dimension with year, month, quarter, week attributes
 
-**Enrichissement :**
-- Ajout de dimensions temporelles (Mois_Annee, Annee)
-- Calcul du statut de livraison (Livrée/Non Livrée)
-- Nettoyage des textes (strip, upper)
+**DIM_Employee**: Employee master data (EmployeeID, EmployeeName)
 
-**KPI principal :**
-```python
-Status_Livraison = 'Livrée' si ShippedDate existe
-                 = 'Non Livrée' si ShippedDate est NULL
+**DIM_Customer**: Customer master data (CustomerID, CompanyName, ShipCity, ShipCountry)
+
+## ETL Pipeline Details
+
+### Extract Phase
+**SQL Server Source:**
+```sql
+-- Joins Orders, Customers, and Employees tables
+-- Retrieves order and delivery information
+-- Marks source as 'SQL_Server'
 ```
 
-### 3. Load (Chargement)
+**Access Source:**
+```sql
+-- Connects to Northwind 2012.accdb
+-- Similar structure to SQL Server
+-- Marks source as 'Access'
+```
 
-- Insertion dans la table `DWH_Global_Analysis` sur SQL Server
-- Mode `replace` : La table est recréée à chaque refresh
-- Validation du nombre de lignes insérées
+Both sources are consolidated into a unified dataset.
 
-## 📈 Visualisations disponibles
+### Transform Phase
 
-### KPIs principaux
-- Total des commandes
-- Commandes livrées
-- Commandes non livrées
-- Taux de livraison (%)
+1. **Date Conversion**: Standardizes OrderDate and ShippedDate to datetime
+2. **Date Dimension Creation**: Generates complete date range with temporal attributes
+3. **Employee Dimension**: Extracts unique employees with cleansed names
+4. **Customer Dimension**: Extracts unique customers with location data
+5. **Delivery Status Calculation**:
+   ```python
+   Status = 'Livrée' if ShippedDate exists
+          = 'Non Livrée' if ShippedDate is NULL
+   ```
 
-### Analyses graphiques
+### Load Phase
 
-**Par Client :**
-- Top 15 clients par volume de commandes
-- Graphique en barres empilées
-- Répartition Livrée/Non Livrée
+Tables created in SQL Server:
+- `FACT_Orders`: Main fact table
+- `DIM_Date`: Date dimension
+- `DIM_Employee`: Employee dimension  
+- `DIM_Customer`: Customer dimension
 
-**Par Employé :**
-- Performance de chaque employé
-- Graphique en barres empilées
-- Identification des employés les plus actifs
+All tables use `replace` mode for fresh loads.
 
-**Par Mois :**
-- Évolution temporelle des commandes
-- Graphique en courbes
-- Tendances de livraison sur le temps
+## Dashboard Features
 
-**Par Année :**
-- Vue d'ensemble annuelle
-- Graphique en barres groupées
-- Comparaison interannuelle
+### KPI Cards
+- **Total Commandes**: Complete order count
+- **Commandes Livrées**: Delivered order count
+- **Commandes Non Livrées**: Undelivered order count
+- **Taux de Livraison**: Delivery rate percentage
 
-## 📝 Table Data Warehouse
+### Visualizations
 
-La table `DWH_Global_Analysis` créée dans SQL Server contient :
+**Temporal Analysis:**
+- Dual-line chart showing delivered vs undelivered trends
+- Complete date dimension statistics
+- Period metrics (average orders/day, max orders/day)
 
-| Colonne | Type | Description |
-|---------|------|-------------|
-| OrderID | int | Identifiant de commande |
-| OrderDate | datetime | Date de commande |
-| ShippedDate | datetime | Date d'expédition |
-| ShipCity | varchar | Ville de livraison |
-| ShipCountry | varchar | Pays de livraison |
-| CompanyName | varchar | Nom du client |
-| EmployeeName | varchar | Nom de l'employé |
-| Source | varchar | SQL_Server ou Access |
-| Mois_Annee | varchar | Format YYYY-MM |
-| Annee | int | Année |
-| Status_Livraison | varchar | Livrée ou Non Livrée |
+**Customer Analysis:**
+- Stacked bar chart for all customers
+- Delivery status breakdown per customer
+- Complete customer table with totals
 
-##  Contribution
+**Employee Analysis:**
+- Stacked bar chart by employee
+- Performance comparison across team
+- Detailed employee metrics table
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- Signaler des bugs
-- Proposer des améliorations
-- Ajouter de nouvelles fonctionnalités
+## Running Standalone ETL
+
+Execute the ETL pipeline without the dashboard:
+
+```bash
+cd scripts
+python main.py
+```
+
+This runs the complete Extract → Transform → Load sequence and populates the data warehouse.
+
+## Troubleshooting
+
+**Access Database Connection Issues:**
+- Verify Microsoft Access Database Engine is installed
+- Check file path uses raw string (r"path")
+- Ensure .accdb file is not open in Access
+
+**SQL Server Connection Issues:**
+- Confirm ODBC Driver 17 is installed
+- Verify SQL Server instance name
+- Check Windows Authentication permissions
+
+**Empty Data Issues:**
+- Verify both databases contain data
+- Check database connection strings
+- Review console output for specific errors
+
+## Contributing
+
+Contributions are welcome! Feel free to:
+- Report bugs via issues
+- Suggest enhancements
+- Submit pull requests
+
+## Author
+
+**Ameziane Manel Fatma**
 
 
-##  Auteur : Ameziane Manel Fatma
 
----
-
-**Note :** Assurez-vous d'avoir les droits d'accès nécessaires aux bases de données avant d'exécuter le pipeline ETL.
+**Note**: Ensure you have appropriate access permissions to both databases before running the ETL pipeline.
